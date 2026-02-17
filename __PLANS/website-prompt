@@ -1,0 +1,150 @@
+You are Claude Code working inside this repository: `walshmathsworks-website`.
+
+Build a complete new production-ready website for Walsh Maths Works, replacing the old WordPress experience documented in `__PLANS/website-context`.
+
+## Primary Objective
+
+Create a modern, high-conversion tutoring website with real online payments for course bookings.  
+Do not recreate WordPress artifacts or legacy clutter.
+
+## Non-Negotiable Requirements
+
+- Use the existing stack in this repo: Next.js App Router + TypeScript.
+- Build a fully responsive site (mobile first, then tablet/desktop).
+- Implement real Stripe payment processing (no fake checkout).
+- Support multi-session booking in one checkout.
+- Support coupon logic for bundle offers.
+- Keep content easy to edit via structured data/config files.
+
+## Core Business Rules To Implement
+
+- Two booking groups:
+- Group A: Saturday 10:00 to 13:00, EUR 45 per session.
+- Group B: Saturday 13:30 to 15:30, EUR 30 per session.
+- Include the 12 syllabus session topics and dates from the context file.
+- Display policy copy clearly:
+- minimum 5 students needed
+- refund or alternative date if class cannot proceed
+- dates may change with notice
+- Preserve contact identity:
+- Tom Walsh
+- phone `087 236 5324`
+- email `walshwpm@gmail.com`
+- location context: Talbot Hotel, Carlow
+
+## Required Pages
+
+- `/` Home (hero, value proposition, schedule highlights, testimonials section, CTA).
+- `/itinerary` Full Paper 1 + Paper 2 breakdown with topic descriptions and dates.
+- `/book/group-a` Group A booking page with selectable sessions.
+- `/book/group-b` Group B booking page with selectable sessions.
+- `/contact` Contact page with direct details and a proper contact form.
+- `/cart` Booking cart summary.
+- `/checkout` Checkout handoff (Stripe flow).
+- `/success` Payment success state.
+- `/cancel` Payment cancel/abandon state.
+- `/privacy` and `/terms` (basic legal placeholders, clean and professional).
+
+## Booking + Cart Behavior
+
+- Users can select multiple sessions before checkout.
+- Show per-session price, subtotal, discount, and final total.
+- Keep cart state stable across navigation (client + server-safe approach).
+- Display clear session metadata in cart:
+- topic
+- date
+- group
+- price
+
+## Coupon Logic
+
+Implement and validate these coupon codes:
+
+- `RQGXEKET`: EUR 90 discount for full Group A bundle.
+- `7UCCPFBV`: EUR 60 discount for full Group B bundle.
+
+Validation rules:
+
+- Coupon is rejected if required bundle criteria are not met.
+- Show a clear error message for invalid coupon use.
+- Show the applied discount line item when valid.
+
+## Stripe Payment Requirements
+
+- Use Stripe Checkout Sessions or Stripe Payment Element (production-grade flow).
+- Currency must be EUR.
+- No shipping collection needed.
+- Capture customer details needed for operations:
+- student name
+- parent/guardian name (or billing name)
+- email
+- phone
+- selected sessions
+- Include line-item metadata so admin can identify exactly what was purchased.
+- Implement webhook endpoint to confirm payment and mark order as paid.
+- Persist order records in a real data store:
+- preferred: Prisma + SQLite (local) with clear schema and upgrade path.
+- Do not store orders only in volatile memory.
+
+## Admin/Editability
+
+- Store editable site content and session catalog in typed data files.
+- Make it easy to update:
+- dates
+- pricing
+- session titles
+- contact info
+- FAQ/policy text
+- testimonials
+
+## UX/UI Direction
+
+- Professional tutoring brand, clean and trustworthy.
+- Strong CTA hierarchy with obvious booking flow.
+- Avoid generic template look.
+- Improve weak areas from old site:
+- remove outdated blog/author/category clutter
+- fix naming inconsistencies
+- add actual testimonial cards (use placeholders if no real quotes yet)
+- include clear trust/support section (phone, email, venue)
+
+## SEO + Quality Requirements
+
+- Proper metadata per page (title, description, Open Graph basics).
+- Semantic headings and accessible form labels.
+- Keyboard-accessible interactions.
+- Reasonable loading performance.
+- No obvious TypeScript or ESLint issues.
+
+## Implementation Constraints
+
+- Keep code organized with reusable components.
+- Use clear domain models for sessions, cart items, and orders.
+- Add concise setup docs to `README.md`:
+- env vars
+- Stripe setup
+- webhook local testing
+- run/build commands
+
+## Required Environment Variables
+
+At minimum support:
+
+- `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY`
+- `STRIPE_SECRET_KEY`
+- `STRIPE_WEBHOOK_SECRET`
+- `SITE_URL`
+
+If you add email confirmations, also support:
+
+- `RESEND_API_KEY` (or your chosen provider)
+
+## Acceptance Criteria
+
+- I can run `npm run dev` and use the full booking flow locally.
+- I can add sessions from Group A or Group B and see accurate totals.
+- Coupon rules behave correctly.
+- Checkout successfully creates a Stripe payment flow.
+- Successful payment lands on `/success` and records an order.
+- Site is clearly better than the old one in structure, clarity, and conversion flow.
+

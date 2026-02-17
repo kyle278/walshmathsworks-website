@@ -1,0 +1,291 @@
+# Walsh Maths Works - Current Website Teardown
+
+Audit date: Tuesday, February 17, 2026  
+Live site reviewed: `https://walshmathsworks.com`  
+Method: sitemap crawl, internal-link crawl, WordPress/WooCommerce APIs, live checkout state test.
+
+## 1) Business Model (What The Site Is Doing Today)
+
+- Service: Leaving Cert Maths tuition booking.
+- Format: Individual sessions sold as products.
+- Two booking groups:
+- Group A: Saturday morning, 10:00am to 1:00pm, EUR 45 per session.
+- Group B: Saturday afternoon, 1:30pm to 3:30pm, EUR 30 per session.
+- Sales model: Customers select one or multiple sessions, add to cart, then pay online.
+- Payment gateway: Stripe (card checkout enabled).
+- Operational note shown on site: minimum 5 students required, refund or alternative date offered, dates subject to change.
+
+## 2) Global Site Structure
+
+### Primary menu (desktop/mobile)
+
+- `/cart/`
+- `/checkout/`
+- `/contact/`
+- `/group-a-booking-form/`
+- `/group-b-booking-form/`
+- `/` (home)
+- `/itinerary/`
+- `/my-account/`
+- `/shop/`
+
+### Footer
+
+- Copyright message and Astra theme attribution.
+
+## 3) Core Pages - Page-by-Page Teardown
+
+### `/` (Home)
+
+- Primary hero copy: "So How Did The Mocks Go?"
+- Prominent CTA: "BOOK NOW TO GET THE RESULTS YOU WANT".
+- Topic/date buttons shown in visual tiles.
+- Contact cards repeated:
+- Tom Walsh phone: `087 236 5324`
+- Email: `walshwpm@gmail.com`
+- Booking options link (to itinerary)
+- Talbot Hotel map link
+- About section: "Over 25 years tuition experience..."
+- Testimonials section heading exists, but no actual testimonials rendered.
+- Final CTA section: "GET THE RESULTS YOU NEED... BOOK NOW."
+- Content inconsistency: section labels say "About Michael" while brand is Tom Walsh.
+
+### `/itinerary/`
+
+- Full syllabus breakdown for Paper 1 and Paper 2.
+- Each topic includes short description and date.
+- Two conversion CTAs:
+- "If you found the mocks difficult" -> Group A style (3h, EUR 45)
+- "If you found the mocks ok but struggled with harder parts" -> Group B style (2h, EUR 30)
+- Core sales page for explaining what is covered before booking.
+
+### `/contact/`
+
+- No contact form.
+- Only direct contact methods/cards:
+- Phone: `087 236 5324`
+- Email: `walshwpm@gmail.com`
+- Booking options link
+- Talbot Hotel map link
+
+### `/group-a-booking-form/`
+
+- Heading states morning schedule and EUR 45 pricing.
+- Notice on minimum class size/refund/reschedule.
+- Woo Product Table interface:
+- Checkbox per row
+- "Add to cart selected"
+- Topic + Date table
+- Includes "Test Order" item in list (likely internal/test product).
+- Coupon message shown on page:
+- `RQGXEKET` for "90 euro discount" for booking all papers.
+
+### `/group-b-booking-form/`
+
+- Heading states afternoon schedule and EUR 30 pricing.
+- Same operational notice as Group A.
+- Same table workflow (select rows, add selected to cart).
+- Coupon message shown on page:
+- `7UCCPFBV` for "60 euro discount" for booking all papers.
+
+### `/shop/`
+
+- Standard WooCommerce product grid.
+- Shows 9 products in current live state (not all topic products).
+- Uses sorting controls and add-to-cart actions.
+
+### `/cart/`
+
+- Empty-cart state currently shown by default.
+- Has standard return-to-shop flow.
+- Coupon entry is available when items are in cart.
+
+### `/checkout/`
+
+- If cart is empty, route redirects to `/cart/` (302 observed).
+- With cart items present:
+- Full billing form (name, address, country, county, phone, email)
+- Coupon section
+- Order review
+- Payment method shown: `Credit Card (Stripe)` (checked by default)
+- "Place order" button
+- No shipping required (digital/service purchase flow).
+
+### `/my-account/`
+
+- Login form only in current public view.
+- Lost password link points to WordPress auth flow.
+
+## 4) Product Catalog Teardown (All Session Products)
+
+### Catalog model
+
+- 12 core topic sessions are duplicated for Group A and Group B pricing tiers.
+- Additional internal product present: `Test Order` (EUR 1.00).
+
+### Topic schedule and pricing matrix
+
+| Topic | Date | Group A Price | Group B Price |
+|---|---|---:|---:|
+| ALGEBRA 1 - Paper 1 | 19th March | 45 | 30 |
+| NUMBER SYSTEMS - Paper 1 | 26th March | 45 | 30 |
+| ALGEBRA 2 - Paper 1 | 2nd April | 45 | 30 |
+| COMPLEX NUMBERS - Paper 1 | 9th April | 45 | 30 |
+| ARITHMETIC - Paper 1 | 16th April | 45 | 30 |
+| SEQUENCES - Paper 1 | 23th April | 45 | 30 |
+| FUNCTIONS & GRAPHS - Paper 1 | 30th April | 45 | 30 |
+| CALCULUS - Paper 1 | 7th May | 45 | 30 |
+| THE LINE AND CIRCLE - Paper 2 | 14th May | 45 | 30 |
+| TRIGONOMETRY - Paper 2 | 21th May | 45 | 30 |
+| LENGTH, AREA & VOLUME - Paper 2 | 26th May | 45 | 30 |
+| PROBABILITY - Paper 2 | 4th June | 45 | 30 |
+
+### Group A product URLs
+
+- `/product/algebra-1-paper-2/`
+- `/product/number-systems-paper-2/`
+- `/product/algebra-2-paper-1/`
+- `/product/complex-number-paper-2/`
+- `/product/arithmetic-paper-1/`
+- `/product/sequences-paper-1/`
+- `/product/functions-graphs-paper-1/`
+- `/product/calculus-paper-1/`
+- `/product/the-line-and-circle-paper-1/`
+- `/product/trigonometry-paper-1/`
+- `/product/length-area-volume-paper-1/`
+- `/product/probability-paper-1/`
+- `/product/test-order/`
+
+### Group B product URLs
+
+- `/product/algebra-1-paper-1/`
+- `/product/number-systems-paper-2-2/`
+- `/product/algebra-2-paper-2-2/`
+- `/product/complex-number-paper-2-2/`
+- `/product/arithmetic-paper-1-2/`
+- `/product/sequences-paper-1-2/`
+- `/product/functions-graphs-paper-1-2/`
+- `/product/calculus-paper-1-2/`
+- `/product/the-line-and-circle-paper-1-2/`
+- `/product/trigonometry-paper-1-2/`
+- `/product/length-area-volume-paper-1-2/`
+- `/product/probability-paper-1-2/`
+
+### Category/taxonomy URLs
+
+- `/product-category/group-a-booking-form/`
+- `/product-category/group-b-booking-form/`
+- `/wpt_product_table/a-group/`
+- `/wpt_product_table/b-group/`
+
+## 5) Checkout + Payment Behavior (Validated)
+
+- Add-to-cart entry points:
+- Product table pages (multi-select)
+- Product pages
+- Shop/category pages
+- Cart supports coupon input.
+- Checkout enforces non-empty cart.
+- Stripe scripts and Stripe Payment Request are active in frontend.
+- Stripe publishable key present in client scripts (expected for Stripe frontend).
+- Checkout data profile appears configured for Ireland:
+- Currency: EUR
+- Country default: IE
+- County default: Carlow
+- No shipping flow for orders.
+
+## 6) Legacy/Non-Core Pages Currently Public
+
+- Blog post still public:
+- `/2022/02/27/hello-world/`
+- Author archive:
+- `/author/creativemarketing2019/`
+- Category archive:
+- `/category/uncategorized/`
+- Feed endpoints:
+- `/feed/`
+- `/comments/feed/`
+- Post/feed variants and reply/comment URLs also discoverable.
+
+## 7) Technical Stack Teardown
+
+- Platform: WordPress + WooCommerce.
+- Theme: `astra` (observed `3.7.7`).
+- Page builder: `elementor` (observed `3.5.6`).
+- E-commerce plugin: `woocommerce` (observed `6.2.2` assets).
+- Payment plugin: `woocommerce-gateway-stripe` (observed `6.2.2` assets).
+- Product-table plugin: `woo-product-table` (observed `3.1.0` config/assets).
+- Other active plugin signal: `templately`.
+- Server headers indicate:
+- `nginx`
+- `PHP/7.4.33`
+- `Plesk`
+- REST and sitemap are publicly available:
+- `/wp-json/`
+- `/wp-sitemap.xml` and child sitemaps.
+
+## 8) Content/UX/Conversion Issues Observed
+
+- Messaging inconsistency:
+- "About Michael" appears on home while business is Tom Walsh.
+- Outdated/course-cycle-specific dates dominate core copy.
+- Grammar/format issues in user-facing copy:
+- Examples: `21th`, `23th`, mixed capitalization.
+- Testimonials heading exists without actual testimonials.
+- Contact page lacks form capture (only phone/email links).
+- Legacy WordPress post/comment pages are public and dilute trust.
+- Product/catalog structure appears inconsistent:
+- Shop/category views show subset counts vs full topic set.
+- `Test Order` product appears in customer-facing flow.
+- Checkout link in top nav can dead-end to cart when empty.
+
+## 9) What Must Be Preserved In New Build
+
+- Core offer framing:
+- Leaving Cert Maths tuition sessions
+- Paper 1/Paper 2 topic structure
+- Two time/price groups (morning EUR 45, afternoon EUR 30)
+- Multi-session booking and single checkout flow
+- Coupon/discount mechanism for bundle booking
+- Clear operational policy:
+- minimum class size
+- refund/reschedule for class viability/date changes
+- Trust/contact data:
+- Tom Walsh name, phone, email, Talbot Hotel location context
+- Stripe-powered online payment as first-class feature.
+
+## 10) Current URL Inventory (Human-Facing)
+
+### Core pages
+
+- `/`
+- `/itinerary/`
+- `/contact/`
+- `/group-a-booking-form/`
+- `/group-b-booking-form/`
+- `/shop/`
+- `/cart/`
+- `/checkout/`
+- `/my-account/`
+
+### Product and booking utility pages
+
+- All URLs listed in section 4 (Group A and Group B product URLs).
+- `/product-category/group-a-booking-form/`
+- `/product-category/group-b-booking-form/`
+- `/wpt_product_table/a-group/`
+- `/wpt_product_table/b-group/`
+
+### Legacy content pages
+
+- `/2022/02/27/hello-world/`
+- `/author/creativemarketing2019/`
+- `/category/uncategorized/`
+
+### Syndication/utility pages (currently public)
+
+- `/feed/`
+- `/comments/feed/`
+- `/wp-json/`
+- `/wp-sitemap.xml`
+
